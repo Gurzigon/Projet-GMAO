@@ -1,0 +1,52 @@
+{
+  "name": "stocks",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "main": "dist/app.js",  
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node app.ts",
+    "seed": "ts-node prisma/seed/index.cjs",
+    "start": "node dist/app.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.13.0",
+    "argon2": "^0.43.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "csurf": "^1.2.2",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "node": "^22.17.0",
+    "openapi-typescript": "^7.8.0",
+    "react-arborist": "^3.4.3",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "swagger": "^0.0.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-typescript-api": "^13.2.7",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/csurf": "^1.11.5",
+    "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.14",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "prisma": "^6.13.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}

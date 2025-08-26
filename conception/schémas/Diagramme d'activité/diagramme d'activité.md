@@ -1,0 +1,7 @@
+# Diagramme d'activité
+
+[Lien PlantUml](https://editor.plantuml.com/uml/RP0z3i8m38NtdC8RvGfXW04XiI46TjEwr59mGduGHu9pz6AOI8WYM9uI--NvSrOfOypbx4mz6BkcCqf7qCrOCiKhIMOl2yCzDEyUXX1zkOuFWkKSya02ZIyyDtONEH7elHqmdWW2HYW2UNoqWt3Bf4darDA85_NlgIy9DDAXQarVA8aFXgJZlawTSa3mAV7HqVVO0phki1g-gUrs-lZ5vKjCMj-m_Apu0GDZWMuM0e_tba2vBWNL-oSGSwRQcL2hcfNAwrkV)
+
+
+
+![alt text](activité.png)

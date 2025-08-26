@@ -1,0 +1,26 @@
+{
+  "short_name": "GMAO",
+  "name": "Gestion de Maintenance Assistée par Ordinateur",
+  "icons": [
+    {
+      "src": "/screwdriver-wrench-svgrepo-com192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+      {
+    "src": "/screwdriver-wrench-svgrepo-com512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  },
+    {
+      "src": "/screwdriver-wrench-svgrepo-com512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1976d2",
+  "background_color": "#ffffff"
+}

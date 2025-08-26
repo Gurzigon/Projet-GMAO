@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+html, body, #root {
+  height: 100%;
+}
+
+.preventive-day {
+  position: relative;
+}
+
+.preventive-day::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.react-datepicker__day--today {
+  @apply bg-green-400 text-white rounded;
+}

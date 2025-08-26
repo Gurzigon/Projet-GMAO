@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Status {
+  id                  Int                  @id @default(autoincrement())
+  label               String               @unique
+  created_at          DateTime?            @default(now())
+  updated_at          DateTime?            @default(now())
+  interventions       Intervention[]       @relation("StatusIntervention")
+  materials           Material[]           @relation("StatusMaterial")
+  statusInterventions StatusIntervention[]
+  preventives         Preventive[]  
+}
+
+model Priority {
+  id            Int            @id @default(autoincrement())
+  label         String         @unique
+  interventions Intervention[]
+}
+
+model Localisation {
+  id            Int            @id @default(autoincrement())
+  label         String         @unique
+  interventions Intervention[]
+  materials     Material[]
+}
+
+model Category {
+  id            Int            @id @default(autoincrement())
+  label         String
+  serviceId     Int?
+  interventions Intervention[]
+  materials     Material[]
+  service       Service?        @relation(fields: [serviceId], references: [id])
+
+  @@unique([label, serviceId]) // contrainte d'unicité par service
+}
+
+model Type {
+  id            Int            @id @default(autoincrement())
+  label         String
+  interventions Intervention[]
+  materials     Material[]
+}
+
+model Service {
+  id            Int            @id @default(autoincrement())
+  label         String         @unique
+  interventions Intervention[]
+  materials     Material[]
+  preventives   Preventive[]
+  users         User[]
+  categories    Category[] 
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+  users User[]
+}
+
+model Parent {
+  id        Int        @id @default(autoincrement())
+  label     String
+  materials Material[]
+}
+
+model User {
+  id              Int                @id @default(autoincrement())
+  lastname        String
+  firstname       String
+  email           String             @unique
+  password        String
+  roleId          Int
+  serviceId       Int
+  created_at      DateTime?          @default(now())
+  updated_at      DateTime?          @default(now())
+  validation_code Int                @unique
+  role            Role               @relation(fields: [roleId], references: [id])
+  service         Service            @relation(fields: [serviceId], references: [id])
+  interventions   UserIntervention[]
+  preventives     UserPreventive[]    
+}
+
+model Intervention {
+  id                  Int                    @id @default(autoincrement())
+  title               String?
+  description         String?
+  initial_comment     String?
+  final_comment       String?
+  begin_date          DateTime?
+  picture             Bytes?
+  mimetype            String?
+  serviceId           Int?
+  localisationId      Int?
+  statusId            Int?
+  categoryId          Int?
+  priorityId          Int?
+  typeId              Int?
+  created_at          DateTime?              @default(now())
+  updated_at          DateTime?              @default(now())
+  requestor_firstname String?
+  requestor_lastname  String?
+  category            Category?              @relation(fields: [categoryId], references: [id])
+  localisation        Localisation?          @relation(fields: [localisationId], references: [id])
+  priority            Priority?              @relation(fields: [priorityId], references: [id])
+  service             Service?               @relation(fields: [serviceId], references: [id])
+  status              Status?                @relation("StatusIntervention", fields: [statusId], references: [id])
+  type                Type?                  @relation(fields: [typeId], references: [id])
+  materials           MaterialIntervention[]
+  statusHistory       StatusIntervention[]
+  userAssignments     UserIntervention[]
+}
+
+model Material {
+  id                Int                    @id @default(autoincrement())
+  is_store          Boolean                @default(false)
+  name              String                 @unique
+  brand             String?
+  model             String?
+  description       String?
+  quantity          Int?
+  registration      String?
+  serial_number     String?
+  engine_number     String?
+  buy_date          DateTime?
+  comment           String?
+  picture           Bytes?
+  mimetype          String?
+  reference         String?               
+  serviceId         Int?
+  categoryId        Int?
+  statusId          Int?
+  localisationId    Int?
+  parentId          Int?
+  typeId            Int?
+  created_at        DateTime?              @default(now())
+  updated_at        DateTime?              @default(now())
+  /// 🔁 Pour regrouper les matériels dans une entité logique (table Parent)
+  parentGroupId     Int?
+  documentations    Documentation[]
+  category          Category?              @relation(fields: [categoryId], references: [id])
+  localisation      Localisation?          @relation(fields: [localisationId], references: [id])
+  parentGroup       Parent?                @relation(fields: [parentGroupId], references: [id])
+  parent            Material?              @relation("MaterialToMaterial", fields: [parentId], references: [id], onDelete: SetNull)
+  children          Material[]             @relation("MaterialToMaterial")
+  service           Service?               @relation(fields: [serviceId], references: [id])
+  status            Status?                @relation("StatusMaterial", fields: [statusId], references: [id])
+  type              Type?                  @relation(fields: [typeId], references: [id])
+  interventionLinks MaterialIntervention[]
+  preventiveLinks   MaterialPreventive[]
+  movements         Movement[]
+}
+
+model Documentation {
+  id         Int       @id @default(autoincrement())
+  title      String
+  file       Bytes?
+  mimetype   String?
+  materialId Int?
+  material   Material? @relation(fields: [materialId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+}
+
+model Movement {
+  id          Int       @id @default(autoincrement())
+  is_incoming Boolean   @default(false)
+  is_outgoing Boolean   @default(false)
+  materialId  Int?
+  material    Material? @relation(fields: [materialId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  quantity    Int?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
+
+model Preventive {
+  id            Int                  @id @default(autoincrement())
+  title         String?
+  description   String?
+  process       String?
+  date          DateTime?
+  serviceId     Int?
+  statusId      Int                  @default(1)
+  created_at    DateTime?            @default(now())
+  updated_at    DateTime?            @default(now())
+  materialLinks MaterialPreventive[]
+  service       Service?             @relation(fields: [serviceId], references: [id])
+  status        Status?               @relation(fields: [statusId], references: [id])
+  users         UserPreventive[]
+}
+
+model MaterialPreventive {
+  id           Int        @id @default(autoincrement())
+  materialId   Int
+  preventiveId Int
+  material     Material   @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  preventive   Preventive @relation(fields: [preventiveId], references: [id], onDelete: Cascade)
+}
+
+model MaterialIntervention {
+  id             Int          @id @default(autoincrement())
+  materialId     Int
+  interventionId Int
+  intervention   Intervention @relation(fields: [interventionId], references: [id])
+  material       Material     @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model StatusIntervention {
+  id             Int          @id @default(autoincrement())
+  statusId       Int
+  interventionId Int
+  comment        String?
+  date           DateTime?    @default(now())
+  intervention   Intervention @relation(fields: [interventionId], references: [id])
+  status         Status       @relation(fields: [statusId], references: [id])
+}
+
+model UserIntervention {
+  id             Int          @id @default(autoincrement())
+  interventionId Int
+  userId         Int
+  intervention   Intervention @relation(fields: [interventionId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+}
+
+model UserPreventive {
+  id             Int          @id @default(autoincrement())
+  preventiveId   Int
+  userId         Int
+  preventive   Preventive     @relation(fields: [preventiveId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+}
